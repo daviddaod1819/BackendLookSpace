@@ -1,0 +1,28 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "rooms",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "meters",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "details",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20201105123303",
+  "dto": "no",
+  "searchEngine": "elasticsearch",
+  "service": "serviceClass",
+  "entityTableName": "space",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "pagination"
+}
