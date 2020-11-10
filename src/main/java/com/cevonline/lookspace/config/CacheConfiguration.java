@@ -47,6 +47,7 @@ public class CacheConfiguration {
             createCache(cm, com.cevonline.lookspace.domain.User.class.getName());
             createCache(cm, com.cevonline.lookspace.domain.Authority.class.getName());
             createCache(cm, com.cevonline.lookspace.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.cevonline.lookspace.domain.Space.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
