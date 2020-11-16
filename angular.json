@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "backend-look-space": {
+    "pruebas-j-hipster": {
       "root": "",
       "sourceRoot": "src/main/webapp",
       "projectType": "application",
@@ -29,7 +29,7 @@
       "architect": {}
     }
   },
-  "defaultProject": "backend-look-space",
+  "defaultProject": "pruebas-j-hipster",
   "cli": {
     "packageManager": "npm"
   }

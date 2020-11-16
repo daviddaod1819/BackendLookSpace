@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { BackendLookSpaceSharedModule } from 'app/shared/shared.module';
+import { PruebasJHipsterSharedModule } from 'app/shared/shared.module';
 import { HOME_ROUTE } from './home.route';
 import { HomeComponent } from './home.component';
 
 @NgModule({
-  imports: [BackendLookSpaceSharedModule, RouterModule.forChild([HOME_ROUTE])],
+  imports: [PruebasJHipsterSharedModule, RouterModule.forChild([HOME_ROUTE])],
   declarations: [HomeComponent],
 })
-export class BackendLookSpaceHomeModule {}
+export class PruebasJHipsterHomeModule {}

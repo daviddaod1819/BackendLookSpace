@@ -58,10 +58,8 @@ management:
             enabled: true
 
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
   application:
-    name: BackendLookSpace
+    name: PruebasJHipster
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -99,13 +97,13 @@ spring:
     allow-bean-definition-overriding: true
   task:
     execution:
-      thread-name-prefix: backend-look-space-task-
+      thread-name-prefix: pruebas-j-hipster-task-
       pool:
         core-size: 2
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: backend-look-space-scheduling-
+      thread-name-prefix: pruebas-j-hipster-scheduling-
       pool:
         size: 2
   thymeleaf:
@@ -133,7 +131,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'backendLookSpaceApp'
+    name: 'pruebasJHipsterApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #     allowed-origins: "*"
@@ -143,11 +141,11 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: BackendLookSpace@localhost
+    from: PruebasJHipster@localhost
   swagger:
     default-include-pattern: /api/.*
-    title: BackendLookSpace API
-    description: BackendLookSpace API documentation
+    title: PruebasJHipster API
+    description: PruebasJHipster API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

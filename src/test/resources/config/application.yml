@@ -18,10 +18,10 @@ spring:
     # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
     #active: testcontainers
   application:
-    name: BackendLookSpace
+    name: PruebasJHipster
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:BackendLookSpace;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:PruebasJHipster;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     name:
     username:
     password:
@@ -47,11 +47,6 @@ spring:
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
-  data:
-    elasticsearch:
-      properties:
-        path:
-          home: target/elasticsearch
   liquibase:
     contexts: test
   mail:
@@ -62,13 +57,13 @@ spring:
     basename: i18n/messages
   task:
     execution:
-      thread-name-prefix: backend-look-space-task-
+      thread-name-prefix: pruebas-j-hipster-task-
       pool:
         core-size: 1
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: backend-look-space-scheduling-
+      thread-name-prefix: pruebas-j-hipster-scheduling-
       pool:
         size: 1
   thymeleaf:
@@ -86,7 +81,7 @@ server:
 
 jhipster:
   clientApp:
-    name: 'backendLookSpaceApp'
+    name: 'pruebasJHipsterApp'
   logging:
     # To test json console appender
     use-json-format: false

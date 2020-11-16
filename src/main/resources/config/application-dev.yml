@@ -17,12 +17,7 @@ logging:
   level:
     ROOT: DEBUG
     io.github.jhipster: DEBUG
-    com.cevonline.lookspace: DEBUG
-
-management:
-  health:
-    elasticsearch:
-      enabled: false
+    com.mycompany.myapp: DEBUG
 
 spring:
   profiles:
@@ -42,8 +37,8 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./target/h2db/db/backendlookspace;DB_CLOSE_DELAY=-1
-    username: BackendLookSpace
+    url: jdbc:h2:file:./target/h2db/db/pruebasjhipster;DB_CLOSE_DELAY=-1
+    username: PruebasJHipster
     password:
     hikari:
       poolName: Hikari
@@ -54,11 +49,6 @@ spring:
   jpa:
     database-platform: io.github.jhipster.domain.util.FixedH2Dialect
     show-sql: true
-  data:
-    elasticsearch:
-      properties:
-        path:
-          home: target/elasticsearch
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
