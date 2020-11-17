@@ -5,6 +5,7 @@ import com.mycompany.myapp.domain.UserInfo;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.MailService;
+import com.mycompany.myapp.service.UserInfoService;
 import com.mycompany.myapp.service.UserService;
 import com.mycompany.myapp.service.dto.PasswordChangeDTO;
 import com.mycompany.myapp.service.dto.UserDTO;
@@ -40,12 +41,15 @@ public class AccountResource {
     private final UserRepository userRepository;
 
     private final UserService userService;
+    
+    private final UserInfoService userInfoService;
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    public AccountResource(UserRepository userRepository, UserService userService, UserInfoService userInfoService, MailService mailService) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.userInfoService = userInfoService;
         this.mailService = mailService;
     }
 
@@ -113,9 +117,9 @@ public class AccountResource {
             return userDTO;
         }
         
-        UserInfoDTO userInfoDTO = new UserInfoDTO();
-        
-        userInfoDTO.setId(user.get().getUserInfo().getId());
+        UserInfoDTO userInfoDTO = userInfoService
+                .findOne(user.get().getUserInfo().getId())
+                .orElseThrow(() -> new AccountResourceException("User could not be found"));
         
         userDTO.setUserInfoDTO(userInfoDTO);
         
