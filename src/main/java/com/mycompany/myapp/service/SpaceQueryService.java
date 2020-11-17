@@ -89,6 +89,9 @@ public class SpaceQueryService extends QueryService<Space> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Space_.id));
             }
+            if (criteria.getTitle()!= null) {
+                specification = specification.and(buildStringSpecification(criteria.getTitle(), Space_.title));
+            }
             if (criteria.getRooms() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getRooms(), Space_.rooms));
             }

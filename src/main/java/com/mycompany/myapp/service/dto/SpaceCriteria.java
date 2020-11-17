@@ -24,6 +24,8 @@ public class SpaceCriteria implements Serializable, Criteria {
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
+    
+    private StringFilter title;
 
     private IntegerFilter rooms;
 
@@ -39,6 +41,7 @@ public class SpaceCriteria implements Serializable, Criteria {
 
     public SpaceCriteria(SpaceCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
+        this.title = other.title == null ? null : other.title.copy();
         this.rooms = other.rooms == null ? null : other.rooms.copy();
         this.meters = other.meters == null ? null : other.meters.copy();
         this.price = other.price == null ? null : other.price.copy();
@@ -57,6 +60,14 @@ public class SpaceCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
+    }
+    
+    public StringFilter getTitle() {
+        return title;
+    }
+
+    public void setTitle(StringFilter title) {
+        this.title = title;
     }
 
     public IntegerFilter getRooms() {
@@ -110,6 +121,7 @@ public class SpaceCriteria implements Serializable, Criteria {
         final SpaceCriteria that = (SpaceCriteria) o;
         return (
             Objects.equals(id, that.id) &&
+            Objects.equals(title, that.title) &&
             Objects.equals(rooms, that.rooms) &&
             Objects.equals(meters, that.meters) &&
             Objects.equals(price, that.price) &&
@@ -128,6 +140,7 @@ public class SpaceCriteria implements Serializable, Criteria {
     public String toString() {
         return "SpaceCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
+                (title != null ? "title=" + title + ", " : "") +
                 (rooms != null ? "rooms=" + rooms + ", " : "") +
                 (meters != null ? "meters=" + meters + ", " : "") +
                 (price != null ? "price=" + price + ", " : "") +

@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service.dto;
 
 import java.io.Serializable;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link com.mycompany.myapp.domain.Space} entity.
@@ -8,6 +9,9 @@ import java.io.Serializable;
 public class SpaceDTO implements Serializable {
     private Long id;
 
+    @Size(min = 1, max = 50)
+    private String title;
+    
     private Integer rooms;
 
     private Integer meters;
@@ -25,6 +29,16 @@ public class SpaceDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    
 
     public Integer getRooms() {
         return rooms;

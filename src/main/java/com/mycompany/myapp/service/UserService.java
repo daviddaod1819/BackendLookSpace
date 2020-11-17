@@ -13,6 +13,7 @@ import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.dto.UserDTO;
 import com.mycompany.myapp.service.dto.UserInfoDTO;
+import com.mycompany.myapp.service.mapper.UserInfoMapper;
 import io.github.jhipster.security.RandomUtil;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -39,6 +40,8 @@ public class UserService {
     private final UserRepository userRepository;
     
     private final UserInfoRepository userInfoRepository;
+    
+    private final UserInfoMapper userInfoMapper;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -53,6 +56,7 @@ public class UserService {
     public UserService(
         UserRepository userRepository,
         UserInfoRepository userInfoRepository,
+        UserInfoMapper userInfoMapper,
         PasswordEncoder passwordEncoder,
         UserSearchRepository userSearchRepository,
         UserInfoSearchRepository userInfoSearchRepository,
@@ -61,6 +65,7 @@ public class UserService {
     ) {
         this.userRepository = userRepository;
         this.userInfoRepository = userInfoRepository;
+        this.userInfoMapper = userInfoMapper;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
         this.userInfoSearchRepository = userInfoSearchRepository;
@@ -156,15 +161,7 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         
-        UserInfo userInfo = new UserInfo();
-        
-        userInfo.setBirthDate(userDTO.getUserInfoDTO().getBirthDate());
-        userInfo.setCountry(userDTO.getUserInfoDTO().getCountry());
-        userInfo.setPostCode(userDTO.getUserInfoDTO().getPostCode());
-        userInfo.setSex(userDTO.getUserInfoDTO().isSex());
-        userInfo.setTown(userDTO.getUserInfoDTO().getTown());
-        
-        UserInfo save = userInfoRepository.save(userInfo);
+        UserInfo save = userInfoRepository.save(userInfoMapper.toEntity(userDTO.getUserInfoDTO()));
         UserInfo saveElastisearch = userInfoSearchRepository.save(save);
         newUser.setUserInfo(save);
         
@@ -215,15 +212,7 @@ public class UserService {
             user.setAuthorities(authorities);
         }
         
-        UserInfo userInfo = new UserInfo();
-        
-        userInfo.setBirthDate(userDTO.getUserInfoDTO().getBirthDate());
-        userInfo.setCountry(userDTO.getUserInfoDTO().getCountry());
-        userInfo.setPostCode(userDTO.getUserInfoDTO().getPostCode());
-        userInfo.setSex(userDTO.getUserInfoDTO().isSex());
-        userInfo.setTown(userDTO.getUserInfoDTO().getTown());
-        
-        UserInfo save = userInfoRepository.save(userInfo);
+        UserInfo save = userInfoRepository.save(userInfoMapper.toEntity(userDTO.getUserInfoDTO()));
         UserInfo saveElastisearch = userInfoSearchRepository.save(save);
         user.setUserInfo(save);
         
@@ -267,16 +256,7 @@ public class UserService {
                         .map(Optional::get)
                         .forEach(managedAuthorities::add);
                     
-                    UserInfo userInfo = new UserInfo();
-        
-                    userInfo.setBirthDate(userDTO.getUserInfoDTO().getBirthDate());
-                    userInfo.setCountry(userDTO.getUserInfoDTO().getCountry());
-                    userInfo.setPostCode(userDTO.getUserInfoDTO().getPostCode());
-                    userInfo.setSex(userDTO.getUserInfoDTO().isSex());
-                    userInfo.setTown(userDTO.getUserInfoDTO().getTown());
-                    userInfo.setId(userDTO.getUserInfoDTO().getId());
-
-                    UserInfo save = userInfoRepository.save(userInfo);
+                    UserInfo save = userInfoRepository.save(userInfoMapper.toEntity(userDTO.getUserInfoDTO()));
                     UserInfo saveElastisearch = userInfoSearchRepository.save(save);
                     user.setUserInfo(save);
         
@@ -327,18 +307,9 @@ public class UserService {
                     user.setLangKey(langKey);
                     user.setImageUrl(imageUrl);
                    
-                    UserInfo userInfo = new UserInfo();
-                    userInfo.setBirthDate(userInfoDTO.getBirthDate());
-                    userInfo.setCountry(userInfoDTO.getCountry());
-                    userInfo.setPostCode(userInfoDTO.getPostCode());
-                    userInfo.setSex(userInfoDTO.isSex());
-                    userInfo.setTown(userInfoDTO.getTown());
-                    userInfo.setId(userInfoDTO.getId());
-                            
-                    UserInfo save = userInfoRepository.save(userInfo);
+                    UserInfo save = userInfoRepository.save(userInfoMapper.toEntity(userInfoDTO));
                     UserInfo saveElastisearch = userInfoSearchRepository.save(save);
                     user.setUserInfo(save);
-        
                     
                     userSearchRepository.save(user);
                     this.clearUserCaches(user);
