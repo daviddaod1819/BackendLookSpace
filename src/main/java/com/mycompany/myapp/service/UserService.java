@@ -5,7 +5,9 @@ import com.mycompany.myapp.domain.Authority;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.domain.UserInfo;
 import com.mycompany.myapp.repository.AuthorityRepository;
+import com.mycompany.myapp.repository.UserInfoRepository;
 import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.repository.search.UserInfoSearchRepository;
 import com.mycompany.myapp.repository.search.UserSearchRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
@@ -35,10 +37,14 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    
+    private final UserInfoRepository userInfoRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     private final UserSearchRepository userSearchRepository;
+    
+    private final UserInfoSearchRepository userInfoSearchRepository;
 
     private final AuthorityRepository authorityRepository;
 
@@ -46,14 +52,18 @@ public class UserService {
 
     public UserService(
         UserRepository userRepository,
+        UserInfoRepository userInfoRepository,
         PasswordEncoder passwordEncoder,
         UserSearchRepository userSearchRepository,
+        UserInfoSearchRepository userInfoSearchRepository,
         AuthorityRepository authorityRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
+        this.userInfoRepository = userInfoRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
+        this.userInfoSearchRepository = userInfoSearchRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
     }
@@ -147,12 +157,16 @@ public class UserService {
         newUser.setAuthorities(authorities);
         
         UserInfo userInfo = new UserInfo();
+        
         userInfo.setBirthDate(userDTO.getUserInfoDTO().getBirthDate());
         userInfo.setCountry(userDTO.getUserInfoDTO().getCountry());
         userInfo.setPostCode(userDTO.getUserInfoDTO().getPostCode());
         userInfo.setSex(userDTO.getUserInfoDTO().isSex());
         userInfo.setTown(userDTO.getUserInfoDTO().getTown());
-        newUser.setUserInfo(userInfo);
+        
+        UserInfo save = userInfoRepository.save(userInfo);
+        UserInfo saveElastisearch = userInfoSearchRepository.save(save);
+        newUser.setUserInfo(save);
         
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
@@ -202,12 +216,16 @@ public class UserService {
         }
         
         UserInfo userInfo = new UserInfo();
+        
         userInfo.setBirthDate(userDTO.getUserInfoDTO().getBirthDate());
         userInfo.setCountry(userDTO.getUserInfoDTO().getCountry());
         userInfo.setPostCode(userDTO.getUserInfoDTO().getPostCode());
         userInfo.setSex(userDTO.getUserInfoDTO().isSex());
         userInfo.setTown(userDTO.getUserInfoDTO().getTown());
-        user.setUserInfo(userInfo);
+        
+        UserInfo save = userInfoRepository.save(userInfo);
+        UserInfo saveElastisearch = userInfoSearchRepository.save(save);
+        user.setUserInfo(save);
         
         userRepository.save(user);
         userSearchRepository.save(user);
@@ -220,7 +238,6 @@ public class UserService {
      * Update all information for a specific user, and return the modified user.
      *
      * @param userDTO user to update.
-     * @param userInfoDTO
      * @return updated user.
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
@@ -251,12 +268,18 @@ public class UserService {
                         .forEach(managedAuthorities::add);
                     
                     UserInfo userInfo = new UserInfo();
+        
                     userInfo.setBirthDate(userDTO.getUserInfoDTO().getBirthDate());
                     userInfo.setCountry(userDTO.getUserInfoDTO().getCountry());
                     userInfo.setPostCode(userDTO.getUserInfoDTO().getPostCode());
                     userInfo.setSex(userDTO.getUserInfoDTO().isSex());
                     userInfo.setTown(userDTO.getUserInfoDTO().getTown());
-                    user.setUserInfo(userInfo);
+                    userInfo.setId(userDTO.getUserInfoDTO().getId());
+
+                    UserInfo save = userInfoRepository.save(userInfo);
+                    UserInfo saveElastisearch = userInfoSearchRepository.save(save);
+                    user.setUserInfo(save);
+        
                     
                     userSearchRepository.save(user);
                     this.clearUserCaches(user);
@@ -288,7 +311,7 @@ public class UserService {
      * @param email     email id of user.
      * @param langKey   language key.
      * @param imageUrl  image URL of user.
-     * @param userInfoDTO
+     * @param userInfo
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl, UserInfoDTO userInfoDTO) {
         SecurityUtils
@@ -303,14 +326,19 @@ public class UserService {
                     }
                     user.setLangKey(langKey);
                     user.setImageUrl(imageUrl);
-                    
+                   
                     UserInfo userInfo = new UserInfo();
                     userInfo.setBirthDate(userInfoDTO.getBirthDate());
                     userInfo.setCountry(userInfoDTO.getCountry());
                     userInfo.setPostCode(userInfoDTO.getPostCode());
                     userInfo.setSex(userInfoDTO.isSex());
                     userInfo.setTown(userInfoDTO.getTown());
-                    user.setUserInfo(userInfo);
+                    userInfo.setId(userInfoDTO.getId());
+                            
+                    UserInfo save = userInfoRepository.save(userInfo);
+                    UserInfo saveElastisearch = userInfoSearchRepository.save(save);
+                    user.setUserInfo(save);
+        
                     
                     userSearchRepository.save(user);
                     this.clearUserCaches(user);
@@ -345,7 +373,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+        Optional<User> user = userRepository.findOneWithAuthoritiesByLogin(login);
+        return user;
     }
 
     @Transactional(readOnly = true)

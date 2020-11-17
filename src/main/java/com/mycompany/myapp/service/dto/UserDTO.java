@@ -173,20 +173,20 @@ public class UserDTO {
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
-    
+
     public UserInfoDTO getUserInfoDTO() {
-        return userInfo;
+        return this.userInfo;
     }
 
-    public UserDTO userInfoDTO(UserInfoDTO userInfoDTO) {
-        this.userInfo = userInfoDTO;
+    public UserDTO userInfo(UserInfoDTO userInfo) {
+        this.userInfo = userInfo;
         return this;
     }
 
-    public void setUserInfoDTO(UserInfoDTO userInfoDTO) {
-        this.userInfo = userInfoDTO;
+    public void setUserInfoDTO(UserInfoDTO userInfo) {
+        this.userInfo = userInfo;
     }
-
+    
     // prettier-ignore
     @Override
     public String toString() {

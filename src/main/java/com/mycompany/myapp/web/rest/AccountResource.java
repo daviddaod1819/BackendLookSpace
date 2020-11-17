@@ -1,12 +1,14 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.domain.UserInfo;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.MailService;
 import com.mycompany.myapp.service.UserService;
 import com.mycompany.myapp.service.dto.PasswordChangeDTO;
 import com.mycompany.myapp.service.dto.UserDTO;
+import com.mycompany.myapp.service.dto.UserInfoDTO;
 import com.mycompany.myapp.web.rest.errors.*;
 import com.mycompany.myapp.web.rest.vm.KeyAndPasswordVM;
 import com.mycompany.myapp.web.rest.vm.ManagedUserVM;
@@ -99,10 +101,25 @@ public class AccountResource {
      */
     @GetMapping("/account")
     public UserDTO getAccount() {
-        return userService
-            .getUserWithAuthorities()
-            .map(UserDTO::new)
-            .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        Optional<User> user = userService
+            .getUserWithAuthorities();
+            
+        
+        UserDTO userDTO = user
+                .map(UserDTO::new)
+                .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        
+        if (user.get().getUserInfo() == null) {
+            return userDTO;
+        }
+        
+        UserInfoDTO userInfoDTO = new UserInfoDTO();
+        
+        userInfoDTO.setId(user.get().getUserInfo().getId());
+        
+        userDTO.setUserInfoDTO(userInfoDTO);
+        
+        return userDTO;
     }
 
     /**
