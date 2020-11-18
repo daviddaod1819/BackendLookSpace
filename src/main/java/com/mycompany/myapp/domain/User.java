@@ -85,7 +85,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "sex")
     private Boolean sex;
 
-    @NotNull
     @Column(name = "birth_date")
     private Instant birthDate;
 
