@@ -47,7 +47,6 @@ public class UserDTO {
     
     private Boolean sex;
 
-    @NotNull
     private Instant birthDate;
 
     @Size(min = 1, max = 50)
