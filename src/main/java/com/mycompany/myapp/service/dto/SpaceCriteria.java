@@ -31,9 +31,15 @@ public class SpaceCriteria implements Serializable, Criteria {
 
     private IntegerFilter meters;
 
-    private IntegerFilter price;
+    private DoubleFilter price;
 
     private StringFilter details;
+
+    private StringFilter place;
+
+    private IntegerFilter bathrooms;
+
+    private StringFilter photos;
 
     public SpaceCriteria() {}
 
@@ -44,6 +50,9 @@ public class SpaceCriteria implements Serializable, Criteria {
         this.meters = other.meters == null ? null : other.meters.copy();
         this.price = other.price == null ? null : other.price.copy();
         this.details = other.details == null ? null : other.details.copy();
+        this.place = other.place == null ? null : other.place.copy();
+        this.bathrooms = other.bathrooms == null ? null : other.bathrooms.copy();
+        this.photos = other.photos == null ? null : other.photos.copy();
     }
 
     @Override
@@ -83,11 +92,11 @@ public class SpaceCriteria implements Serializable, Criteria {
         this.meters = meters;
     }
 
-    public IntegerFilter getPrice() {
+    public DoubleFilter getPrice() {
         return price;
     }
 
-    public void setPrice(IntegerFilter price) {
+    public void setPrice(DoubleFilter price) {
         this.price = price;
     }
 
@@ -97,6 +106,30 @@ public class SpaceCriteria implements Serializable, Criteria {
 
     public void setDetails(StringFilter details) {
         this.details = details;
+    }
+
+    public StringFilter getPlace() {
+        return place;
+    }
+
+    public void setPlace(StringFilter place) {
+        this.place = place;
+    }
+
+    public IntegerFilter getBathrooms() {
+        return bathrooms;
+    }
+
+    public void setBathrooms(IntegerFilter bathrooms) {
+        this.bathrooms = bathrooms;
+    }
+
+    public StringFilter getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(StringFilter photos) {
+        this.photos = photos;
     }
 
     @Override
@@ -114,13 +147,16 @@ public class SpaceCriteria implements Serializable, Criteria {
             Objects.equals(rooms, that.rooms) &&
             Objects.equals(meters, that.meters) &&
             Objects.equals(price, that.price) &&
-            Objects.equals(details, that.details)
+            Objects.equals(details, that.details) &&
+            Objects.equals(place, that.place) &&
+            Objects.equals(bathrooms, that.bathrooms) &&
+            Objects.equals(photos, that.photos)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, rooms, meters, price, details);
+        return Objects.hash(id, title, rooms, meters, price, details, place, bathrooms, photos);
     }
 
     // prettier-ignore
@@ -133,6 +169,9 @@ public class SpaceCriteria implements Serializable, Criteria {
                 (meters != null ? "meters=" + meters + ", " : "") +
                 (price != null ? "price=" + price + ", " : "") +
                 (details != null ? "details=" + details + ", " : "") +
+                (place != null ? "place=" + place + ", " : "") +
+                (bathrooms != null ? "bathrooms=" + bathrooms + ", " : "") +
+                (photos != null ? "bathrooms=" + photos + ", " : "") +
             "}";
     }
 }

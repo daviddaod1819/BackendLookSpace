@@ -5,6 +5,9 @@ export interface ISpace {
   meters?: number;
   price?: number;
   details?: string;
+  place?: string;
+  bathrooms?: number;
+  photos?: string;
 }
 
 export class Space implements ISpace {
@@ -14,6 +17,9 @@ export class Space implements ISpace {
     public rooms?: number,
     public meters?: number,
     public price?: number,
-    public details?: string
+    public details?: string,
+    public place?: string,
+    public bathrooms?: number,
+    public photos?: string
   ) {}
 }

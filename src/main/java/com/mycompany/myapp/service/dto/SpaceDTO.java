@@ -12,13 +12,24 @@ public class SpaceDTO implements Serializable {
     @Size(min = 1, max = 50)
     private String title;
 
+    @Min(value = 0)
     private Integer rooms;
 
+    @Min(value = 0)
     private Integer meters;
 
-    private Integer price;
+    @DecimalMin(value = "0")
+    private Double price;
 
     private String details;
+
+    @Size(min = 3)
+    private String place;
+
+    @Min(value = 0)
+    private Integer bathrooms;
+
+    private String photos;
 
     public Long getId() {
         return id;
@@ -52,11 +63,11 @@ public class SpaceDTO implements Serializable {
         this.meters = meters;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -66,6 +77,30 @@ public class SpaceDTO implements Serializable {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public Integer getBathrooms() {
+        return bathrooms;
+    }
+
+    public void setBathrooms(Integer bathrooms) {
+        this.bathrooms = bathrooms;
+    }
+
+    public String getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(String photos) {
+        this.photos = photos;
     }
 
     @Override
@@ -95,6 +130,9 @@ public class SpaceDTO implements Serializable {
             ", meters=" + getMeters() +
             ", price=" + getPrice() +
             ", details='" + getDetails() + "'" +
+            ", place='" + getPlace() + "'" +
+            ", bathrooms=" + getBathrooms() +
+            ", photos='" + getPhotos() + "'" +
             "}";
     }
 }

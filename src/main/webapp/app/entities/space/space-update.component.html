@@ -50,6 +50,40 @@
                     <input type="text" class="form-control" name="details" id="field_details"
                            formControlName="details"/>
                 </div>
+                
+                <div class="form-group">
+                    <label class="form-control-label" for="field_place">Place</label>
+                    <input type="text" class="form-control" name="place" id="field_place"
+                           formControlName="place"/>
+                    <div *ngIf="editForm.get('place')!.invalid && (editForm.get('place')!.dirty || editForm.get('place')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('place')?.errors?.minlength">
+                        This field is required to be at least 3 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_bathrooms">Bathrooms</label>
+                    <input type="number" class="form-control" name="bathrooms" id="field_bathrooms"
+                           formControlName="bathrooms"/>
+                    <div *ngIf="editForm.get('bathrooms')!.invalid && (editForm.get('bathrooms')!.dirty || editForm.get('bathrooms')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('bathrooms')?.errors?.min">
+                            This field should be at least 0.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('bathrooms')?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-control-label" for="field_photos">Photos</label>
+                    <input type="text" class="form-control" name="photos" id="field_photos"
+                           formControlName="photos"/>
+                </div>
             </div>
 
             <div>

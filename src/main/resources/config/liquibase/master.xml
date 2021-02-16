@@ -20,5 +20,6 @@
     <include file="config/liquibase/changelog/00000000000001-2_edit_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201117105006_edit_entity_Space.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201117105006_added_entity_constraints_Space.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210216130606_edit_entity_Space.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

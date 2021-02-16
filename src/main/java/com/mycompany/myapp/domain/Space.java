@@ -2,6 +2,7 @@ package com.mycompany.myapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -22,22 +23,37 @@ public class Space implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Size(min = 1, max = 50)
-    @Column(name = "title", length = 50)
+    @Column(name = "title", length = 50, nullable = false)
     private String title;
 
+    @Min(value = 0)
     @Column(name = "rooms")
     private Integer rooms;
 
+    @Min(value = 0)
     @Column(name = "meters")
     private Integer meters;
 
+    @DecimalMin(value = "0")
     @Column(name = "price")
-    private Integer price;
+    private Double price;
 
     @Column(name = "details")
     private String details;
-    
+
+    @Size(min = 3)
+    @Column(name = "place")
+    private String place;
+
+    @Min(value = 0)
+    @Column(name = "bathrooms")
+    private Integer bathrooms;
+
+    @Column(name = "photos")
+    private String photos;
+
     @ManyToOne
     @JsonIgnoreProperties(value = "spaces", allowSetters = true)
     private User user;
@@ -90,16 +106,16 @@ public class Space implements Serializable {
         this.meters = meters;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public Space price(Integer price) {
+    public Space price(Double price) {
         this.price = price;
         return this;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -116,6 +132,45 @@ public class Space implements Serializable {
         this.details = details;
     }
 
+    public String getPlace() {
+        return place;
+    }
+
+    public Space place(String place) {
+        this.place = place;
+        return this;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public Integer getBathrooms() {
+        return bathrooms;
+    }
+
+    public Space bathrooms(Integer bathrooms) {
+        this.bathrooms = bathrooms;
+        return this;
+    }
+
+    public void setBathrooms(Integer bathrooms) {
+        this.bathrooms = bathrooms;
+    }
+
+    public String getPhotos() {
+        return photos;
+    }
+
+    public Space photos(String photos) {
+        this.photos = photos;
+        return this;
+    }
+
+    public void setPhotos(String photos) {
+        this.photos = photos;
+    }
+
     public User getUser() {
         return user;
     }
@@ -123,8 +178,6 @@ public class Space implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    
-    
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

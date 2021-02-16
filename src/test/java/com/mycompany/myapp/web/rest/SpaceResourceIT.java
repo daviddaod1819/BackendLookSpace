@@ -53,12 +53,22 @@ public class SpaceResourceIT {
     private static final Integer UPDATED_METERS = 2;
     private static final Integer SMALLER_METERS = 1 - 1;
 
-    private static final Integer DEFAULT_PRICE = 1;
-    private static final Integer UPDATED_PRICE = 2;
-    private static final Integer SMALLER_PRICE = 1 - 1;
+    private static final Double DEFAULT_PRICE = 0D;
+    private static final Double UPDATED_PRICE = 1D;
+    private static final Double SMALLER_PRICE = 0D - 1D;
 
     private static final String DEFAULT_DETAILS = "AAAAAAAAAA";
     private static final String UPDATED_DETAILS = "BBBBBBBBBB";
+
+    private static final String DEFAULT_PLACE = "AAAAAAAAAA";
+    private static final String UPDATED_PLACE = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_BATHROOMS = 0;
+    private static final Integer UPDATED_BATHROOMS = 1;
+    private static final Integer SMALLER_BATHROOMS = 0 - 1;
+
+    private static final String DEFAULT_PHOTOS = "AAAAAAAAAA";
+    private static final String UPDATED_PHOTOS = "BBBBBBBBBB";
 
     @Autowired
     private SpaceRepository spaceRepository;
@@ -100,7 +110,10 @@ public class SpaceResourceIT {
             .rooms(DEFAULT_ROOMS)
             .meters(DEFAULT_METERS)
             .price(DEFAULT_PRICE)
-            .details(DEFAULT_DETAILS);
+            .details(DEFAULT_DETAILS)
+            .place(DEFAULT_PLACE)
+            .bathrooms(DEFAULT_BATHROOMS)
+            .photos(DEFAULT_PHOTOS);
         return space;
     }
 
@@ -116,7 +129,10 @@ public class SpaceResourceIT {
             .rooms(UPDATED_ROOMS)
             .meters(UPDATED_METERS)
             .price(UPDATED_PRICE)
-            .details(UPDATED_DETAILS);
+            .details(UPDATED_DETAILS)
+            .place(UPDATED_PLACE)
+            .bathrooms(UPDATED_BATHROOMS)
+            .photos(UPDATED_PHOTOS);
         return space;
     }
 
@@ -144,6 +160,9 @@ public class SpaceResourceIT {
         assertThat(testSpace.getMeters()).isEqualTo(DEFAULT_METERS);
         assertThat(testSpace.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testSpace.getDetails()).isEqualTo(DEFAULT_DETAILS);
+        assertThat(testSpace.getPlace()).isEqualTo(DEFAULT_PLACE);
+        assertThat(testSpace.getBathrooms()).isEqualTo(DEFAULT_BATHROOMS);
+        assertThat(testSpace.getPhotos()).isEqualTo(DEFAULT_PHOTOS);
 
         // Validate the Space in Elasticsearch
         verify(mockSpaceSearchRepository, times(1)).save(testSpace);
@@ -187,7 +206,10 @@ public class SpaceResourceIT {
             .andExpect(jsonPath("$.[*].rooms").value(hasItem(DEFAULT_ROOMS)))
             .andExpect(jsonPath("$.[*].meters").value(hasItem(DEFAULT_METERS)))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
-            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)));
+            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)))
+            .andExpect(jsonPath("$.[*].place").value(hasItem(DEFAULT_PLACE)))
+            .andExpect(jsonPath("$.[*].bathrooms").value(hasItem(DEFAULT_BATHROOMS)))
+            .andExpect(jsonPath("$.[*].photos").value(hasItem(DEFAULT_PHOTOS)));
     }
 
     @Test
@@ -206,7 +228,10 @@ public class SpaceResourceIT {
             .andExpect(jsonPath("$.rooms").value(DEFAULT_ROOMS))
             .andExpect(jsonPath("$.meters").value(DEFAULT_METERS))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
-            .andExpect(jsonPath("$.details").value(DEFAULT_DETAILS));
+            .andExpect(jsonPath("$.details").value(DEFAULT_DETAILS))
+            .andExpect(jsonPath("$.place").value(DEFAULT_PLACE))
+            .andExpect(jsonPath("$.bathrooms").value(DEFAULT_BATHROOMS))
+            .andExpect(jsonPath("$.photos").value(DEFAULT_PHOTOS));
     }
 
     @Test
@@ -695,6 +720,266 @@ public class SpaceResourceIT {
         defaultSpaceShouldBeFound("details.doesNotContain=" + UPDATED_DETAILS);
     }
 
+    @Test
+    @Transactional
+    public void getAllSpazosByPlaceIsEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where place equals to DEFAULT_PLACE
+        defaultSpaceShouldBeFound("place.equals=" + DEFAULT_PLACE);
+
+        // Get all the spazoList where place equals to UPDATED_PLACE
+        defaultSpaceShouldNotBeFound("place.equals=" + UPDATED_PLACE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByPlaceIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where place not equals to DEFAULT_PLACE
+        defaultSpaceShouldNotBeFound("place.notEquals=" + DEFAULT_PLACE);
+
+        // Get all the spazoList where place not equals to UPDATED_PLACE
+        defaultSpaceShouldBeFound("place.notEquals=" + UPDATED_PLACE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByPlaceIsInShouldWork() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where place in DEFAULT_PLACE or UPDATED_PLACE
+        defaultSpaceShouldBeFound("place.in=" + DEFAULT_PLACE + "," + UPDATED_PLACE);
+
+        // Get all the spazoList where place equals to UPDATED_PLACE
+        defaultSpaceShouldNotBeFound("place.in=" + UPDATED_PLACE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByPlaceIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where place is not null
+        defaultSpaceShouldBeFound("place.specified=true");
+
+        // Get all the spazoList where place is null
+        defaultSpaceShouldNotBeFound("place.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByPlaceContainsSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where place contains DEFAULT_PLACE
+        defaultSpaceShouldBeFound("place.contains=" + DEFAULT_PLACE);
+
+        // Get all the spazoList where place contains UPDATED_PLACE
+        defaultSpaceShouldNotBeFound("place.contains=" + UPDATED_PLACE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByPlaceNotContainsSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where place does not contain DEFAULT_PLACE
+        defaultSpaceShouldNotBeFound("place.doesNotContain=" + DEFAULT_PLACE);
+
+        // Get all the spazoList where place does not contain UPDATED_PLACE
+        defaultSpaceShouldBeFound("place.doesNotContain=" + UPDATED_PLACE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms equals to DEFAULT_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.equals=" + DEFAULT_BATHROOMS);
+
+        // Get all the spazoList where bathrooms equals to UPDATED_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.equals=" + UPDATED_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms not equals to DEFAULT_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.notEquals=" + DEFAULT_BATHROOMS);
+
+        // Get all the spazoList where bathrooms not equals to UPDATED_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.notEquals=" + UPDATED_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsInShouldWork() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms in DEFAULT_BATHROOMS or UPDATED_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.in=" + DEFAULT_BATHROOMS + "," + UPDATED_BATHROOMS);
+
+        // Get all the spazoList where bathrooms equals to UPDATED_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.in=" + UPDATED_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms is not null
+        defaultSpaceShouldBeFound("bathrooms.specified=true");
+
+        // Get all the spazoList where bathrooms is null
+        defaultSpaceShouldNotBeFound("bathrooms.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms is greater than or equal to DEFAULT_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.greaterThanOrEqual=" + DEFAULT_BATHROOMS);
+
+        // Get all the spazoList where bathrooms is greater than or equal to UPDATED_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.greaterThanOrEqual=" + UPDATED_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms is less than or equal to DEFAULT_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.lessThanOrEqual=" + DEFAULT_BATHROOMS);
+
+        // Get all the spazoList where bathrooms is less than or equal to SMALLER_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.lessThanOrEqual=" + SMALLER_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsLessThanSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms is less than DEFAULT_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.lessThan=" + DEFAULT_BATHROOMS);
+
+        // Get all the spazoList where bathrooms is less than UPDATED_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.lessThan=" + UPDATED_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpazosByBathroomsIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spazoList where bathrooms is greater than DEFAULT_BATHROOMS
+        defaultSpaceShouldNotBeFound("bathrooms.greaterThan=" + DEFAULT_BATHROOMS);
+
+        // Get all the spazoList where bathrooms is greater than SMALLER_BATHROOMS
+        defaultSpaceShouldBeFound("bathrooms.greaterThan=" + SMALLER_BATHROOMS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpacesByPhotosIsEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spaceList where photos equals to DEFAULT_DETAILS
+        defaultSpaceShouldBeFound("photos.equals=" + DEFAULT_PHOTOS);
+
+        // Get all the spaceList where photos equals to UPDATED_DETAILS
+        defaultSpaceShouldNotBeFound("photos.equals=" + UPDATED_PHOTOS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpacesByPhotosIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spaceList where photos not equals to DEFAULT_DETAILS
+        defaultSpaceShouldNotBeFound("photos.notEquals=" + DEFAULT_PHOTOS);
+
+        // Get all the spaceList where photos not equals to UPDATED_DETAILS
+        defaultSpaceShouldBeFound("photos.notEquals=" + UPDATED_PHOTOS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpacesByPhotosIsInShouldWork() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spaceList where photos in DEFAULT_PHOTOS or UPDATED_PHOTOS
+        defaultSpaceShouldBeFound("photos.in=" + DEFAULT_PHOTOS + "," + UPDATED_PHOTOS);
+
+        // Get all the spaceList where photos equals to UPDATED_DETAILS
+        defaultSpaceShouldNotBeFound("photos.in=" + UPDATED_PHOTOS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpacesByPhotosIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spaceList where photos is not null
+        defaultSpaceShouldBeFound("photos.specified=true");
+
+        // Get all the spaceList where photos is null
+        defaultSpaceShouldNotBeFound("photos.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpacesByPhotosContainsSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spaceList where photos contains DEFAULT_PHOTOS
+        defaultSpaceShouldBeFound("photos.contains=" + DEFAULT_DETAILS);
+
+        // Get all the spaceList where photos contains UPDATED_PHOTOS
+        defaultSpaceShouldNotBeFound("photos.contains=" + UPDATED_PHOTOS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSpacesByPhotosNotContainsSomething() throws Exception {
+        // Initialize the database
+        spaceRepository.saveAndFlush(space);
+
+        // Get all the spaceList where photos does not contain DEFAULT_PHOTOS
+        defaultSpaceShouldNotBeFound("photos.doesNotContain=" + DEFAULT_PHOTOS);
+
+        // Get all the spaceList where photos does not contain UPDATED_PHOTOS
+        defaultSpaceShouldBeFound("photos.doesNotContain=" + UPDATED_PHOTOS);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -708,7 +993,10 @@ public class SpaceResourceIT {
             .andExpect(jsonPath("$.[*].rooms").value(hasItem(DEFAULT_ROOMS)))
             .andExpect(jsonPath("$.[*].meters").value(hasItem(DEFAULT_METERS)))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
-            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)));
+            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)))
+            .andExpect(jsonPath("$.[*].place").value(hasItem(DEFAULT_PLACE)))
+            .andExpect(jsonPath("$.[*].bathrooms").value(hasItem(DEFAULT_BATHROOMS)))
+            .andExpect(jsonPath("$.[*].photos").value(hasItem(DEFAULT_PHOTOS)));
 
         // Check, that the count call also returns 1
         restSpaceMockMvc
@@ -756,7 +1044,15 @@ public class SpaceResourceIT {
         Space updatedSpace = spaceRepository.findById(space.getId()).get();
         // Disconnect from session so that the updates on updatedSpace are not directly saved in db
         em.detach(updatedSpace);
-        updatedSpace.title(UPDATED_TITLE).rooms(UPDATED_ROOMS).meters(UPDATED_METERS).price(UPDATED_PRICE).details(UPDATED_DETAILS);
+        updatedSpace
+            .title(UPDATED_TITLE)
+            .rooms(UPDATED_ROOMS)
+            .meters(UPDATED_METERS)
+            .price(UPDATED_PRICE)
+            .details(UPDATED_DETAILS)
+            .place(UPDATED_PLACE)
+            .bathrooms(UPDATED_BATHROOMS)
+            .photos(UPDATED_PHOTOS);
         SpaceDTO spaceDTO = spaceMapper.toDto(updatedSpace);
 
         restSpaceMockMvc
@@ -772,6 +1068,9 @@ public class SpaceResourceIT {
         assertThat(testSpace.getMeters()).isEqualTo(UPDATED_METERS);
         assertThat(testSpace.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testSpace.getDetails()).isEqualTo(UPDATED_DETAILS);
+        assertThat(testSpace.getPlace()).isEqualTo(UPDATED_PLACE);
+        assertThat(testSpace.getBathrooms()).isEqualTo(UPDATED_BATHROOMS);
+        assertThat(testSpace.getPhotos()).isEqualTo(UPDATED_PHOTOS);
 
         // Validate the Space in Elasticsearch
         verify(mockSpaceSearchRepository, times(1)).save(testSpace);
@@ -838,6 +1137,9 @@ public class SpaceResourceIT {
             .andExpect(jsonPath("$.[*].rooms").value(hasItem(DEFAULT_ROOMS)))
             .andExpect(jsonPath("$.[*].meters").value(hasItem(DEFAULT_METERS)))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
-            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)));
+            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)))
+            .andExpect(jsonPath("$.[*].place").value(hasItem(DEFAULT_PLACE)))
+            .andExpect(jsonPath("$.[*].bathrooms").value(hasItem(DEFAULT_BATHROOMS)))
+            .andExpect(jsonPath("$.[*].photos").value(hasItem(DEFAULT_PHOTOS)));
     }
 }

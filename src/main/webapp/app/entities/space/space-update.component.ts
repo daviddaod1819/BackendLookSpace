@@ -18,10 +18,13 @@ export class SpaceUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     title: [null, [Validators.minLength(1), Validators.maxLength(50)]],
-    rooms: [],
-    meters: [],
-    price: [],
+    rooms: [null, [Validators.min(0)]],
+    meters: [null, [Validators.min(0)]],
+    price: [null, [Validators.min(0)]],
     details: [],
+    place: [null, [Validators.minLength(3)]],
+    bathrooms: [null, [Validators.min(0)]],
+    photos: [],
   });
 
   constructor(protected spaceService: SpaceService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
@@ -40,6 +43,9 @@ export class SpaceUpdateComponent implements OnInit {
       meters: space.meters,
       price: space.price,
       details: space.details,
+      place: space.place,
+      bathrooms: space.bathrooms,
+      photos: space.photos,
     });
   }
 
@@ -66,6 +72,9 @@ export class SpaceUpdateComponent implements OnInit {
       meters: this.editForm.get(['meters'])!.value,
       price: this.editForm.get(['price'])!.value,
       details: this.editForm.get(['details'])!.value,
+      place: this.editForm.get(['place'])!.value,
+      bathrooms: this.editForm.get(['bathrooms'])!.value,
+      photos: this.editForm.get(['photos'])!.value,
     };
   }
 
