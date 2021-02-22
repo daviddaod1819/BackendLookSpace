@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service.dto;
 
+import com.mycompany.myapp.domain.User;
 import java.io.Serializable;
 import javax.validation.constraints.*;
 
@@ -30,6 +31,8 @@ public class SpaceDTO implements Serializable {
     private Integer bathrooms;
 
     private String photos;
+
+    private User user;
 
     public Long getId() {
         return id;
@@ -101,6 +104,14 @@ public class SpaceDTO implements Serializable {
 
     public void setPhotos(String photos) {
         this.photos = photos;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
