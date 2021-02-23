@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mycompany.myapp.domain.User;
 import java.io.Serializable;
 import javax.validation.constraints.*;
@@ -32,6 +33,7 @@ public class SpaceDTO implements Serializable {
 
     private String photos;
 
+    @JsonIgnoreProperties(value = "spaces")
     private User user;
 
     public Long getId() {

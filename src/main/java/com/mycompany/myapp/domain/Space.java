@@ -55,7 +55,7 @@ public class Space implements Serializable {
     private String photos;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "spaces", allowSetters = true)
+    @JsonIgnoreProperties(value = "spaces")
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
